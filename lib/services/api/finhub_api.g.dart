@@ -69,7 +69,7 @@ class _FinHubApi implements FinHubApi {
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    final _result = await _dio.request<Map<String, dynamic>>('/stock/profile',
+    final _result = await _dio.request<Map<String, dynamic>>('/stock/profile2',
         queryParameters: queryParameters,
         options: RequestOptions(
             method: 'GET',

@@ -23,7 +23,7 @@ abstract class FinHubApi {
     @Query('exchange') String exchange,
   });
 
-  @GET('/stock/profile')
+  @GET('/stock/profile2')
   Future<CompanyProfile> getCompanyProfile({
     @Query('token') String token,
     @Query('symbol') String symbol,
