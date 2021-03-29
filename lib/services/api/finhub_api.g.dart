@@ -82,27 +82,6 @@ class _FinHubApi implements FinHubApi {
   }
 
   @override
-  Future<Executives> getExecutives({token, symbol}) async {
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{
-      r'token': token,
-      r'symbol': symbol
-    };
-    queryParameters.removeWhere((k, v) => v == null);
-    final _data = <String, dynamic>{};
-    final _result = await _dio.request<Map<String, dynamic>>('/stock/executive',
-        queryParameters: queryParameters,
-        options: RequestOptions(
-            method: 'GET',
-            headers: <String, dynamic>{},
-            extra: _extra,
-            baseUrl: baseUrl),
-        data: _data);
-    final value = Executives.fromJson(_result.data);
-    return value;
-  }
-
-  @override
   Future<List<CompanyNews>> getCompanyNews(
       {token, symbol, fromDate, toDate}) async {
     const _extra = <String, dynamic>{};
@@ -125,6 +104,189 @@ class _FinHubApi implements FinHubApi {
     var value = _result.data
         .map((dynamic i) => CompanyNews.fromJson(i as Map<String, dynamic>))
         .toList();
+    return value;
+  }
+
+  @override
+  Future<CompanyNewsSentiment> getCompanyNewsSentiment({token, symbol}) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'token': token,
+      r'symbol': symbol
+    };
+    queryParameters.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>('/news-sentiment',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = CompanyNewsSentiment.fromJson(_result.data);
+    return value;
+  }
+
+  @override
+  Future<List<String>> getPeers({token, symbol}) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'token': token,
+      r'symbol': symbol
+    };
+    queryParameters.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<List<dynamic>>('/stock/peers',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = _result.data.cast<String>();
+    return value;
+  }
+
+  @override
+  Future<BasicFinancials> getBasicFinancials({token, symbol, metric}) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'token': token,
+      r'symbol': symbol,
+      r'metric': metric
+    };
+    queryParameters.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>('/stock/metric',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = BasicFinancials.fromJson(_result.data);
+    return value;
+  }
+
+  @override
+  Future<List<Recommendation>> getRecommendation({token, symbol}) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'token': token,
+      r'symbol': symbol
+    };
+    queryParameters.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<List<dynamic>>('/stock/recommendation',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    var value = _result.data
+        .map((dynamic i) => Recommendation.fromJson(i as Map<String, dynamic>))
+        .toList();
+    return value;
+  }
+
+  @override
+  Future<Candles> getCandles(
+      {token, symbol, resolution, fromTime, toTime}) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'token': token,
+      r'symbol': symbol,
+      r'resolution': resolution,
+      r'from': fromTime,
+      r'to': toTime
+    };
+    queryParameters.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>('/stock/candle',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = Candles.fromJson(_result.data);
+    return value;
+  }
+
+  @override
+  Future<PatternRecognition> getPatternRecognition(
+      {token, symbol, resolution}) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'token': token,
+      r'symbol': symbol,
+      r'resolution': resolution
+    };
+    queryParameters.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>('/scan/pattern',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = PatternRecognition.fromJson(_result.data);
+    return value;
+  }
+
+  @override
+  Future<SupportAndResistanceLevel> getSupportAndResistanceLevel(
+      {token, symbol, resolution}) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'token': token,
+      r'symbol': symbol,
+      r'resolution': resolution
+    };
+    queryParameters.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>(
+        '/scan/support-resistance',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = SupportAndResistanceLevel.fromJson(_result.data);
+    return value;
+  }
+
+  @override
+  Future<AggregateIndicators> getAggregateIndicators(
+      {token, symbol, resolution}) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'token': token,
+      r'symbol': symbol,
+      r'resolution': resolution
+    };
+    queryParameters.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>(
+        '/scan/technical-indicator',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = AggregateIndicators.fromJson(_result.data);
     return value;
   }
 }

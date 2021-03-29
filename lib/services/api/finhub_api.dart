@@ -1,6 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:finboard_app/entities/company_profile.dart';
-import 'package:finboard_app/entities/executive.dart';
 import 'package:retrofit/http.dart';
 
 import '../../entities/entities.dart';
@@ -29,17 +27,71 @@ abstract class FinHubApi {
     @Query('symbol') String symbol,
   });
 
-  @GET('/stock/executive')
-  Future<Executives> getExecutives({
-    @Query('token') String token,
-    @Query('symbol') String symbol,
-  });
-
   @GET('/company-news')
   Future<List<CompanyNews>> getCompanyNews({
     @Query('token') String token,
     @Query('symbol') String symbol,
     @Query('from') String fromDate,
     @Query('to') String toDate,
+  });
+
+  @GET('/news-sentiment')
+  Future<CompanyNewsSentiment> getCompanyNewsSentiment({
+    @Query('token') String token,
+    @Query('symbol') String symbol,
+  });
+
+  @GET('/stock/peers')
+  Future<List<String>> getPeers({
+    @Query('token') String token,
+    @Query('symbol') String symbol,
+  });
+
+  @GET('/stock/metric')
+  Future<BasicFinancials> getBasicFinancials({
+    @Query('token') String token,
+    @Query('symbol') String symbol,
+    @Query('metric') String metric,
+  });
+
+  @GET('/stock/recommendation')
+  Future<List<Recommendation>> getRecommendation({
+    @Query('token') String token,
+    @Query('symbol') String symbol,
+  });
+
+  @GET('/stock/candle')
+  Future<Candles> getCandles({
+    @Query('token') String token,
+    @Query('symbol') String symbol,
+    // Supported resolution includes 1, 5, 15, 30, 60, D, W, M .Some timeframes might not be available depending on the exchange.
+    @Query('resolution') String resolution,
+    // UNIX timestamp
+    @Query('from') String fromTime,
+    @Query('to') String toTime,
+  });
+
+  @GET('/scan/pattern')
+  Future<PatternRecognition> getPatternRecognition({
+    @Query('token') String token,
+    @Query('symbol') String symbol,
+    // Supported resolution includes 1, 5, 15, 30, 60, D, W, M .Some timeframes might not be available depending on the exchange.
+    @Query('resolution') String resolution,
+  });
+
+  @GET('/scan/support-resistance')
+  Future<SupportAndResistanceLevel> getSupportAndResistanceLevel({
+    @Query('token') String token,
+    @Query('symbol') String symbol,
+    // Supported resolution includes 1, 5, 15, 30, 60, D, W, M .Some timeframes might not be available depending on the exchange.
+    @Query('resolution') String resolution,
+  });
+
+  @GET('/scan/technical-indicator')
+  Future<AggregateIndicators> getAggregateIndicators({
+    @Query('token') String token,
+    @Query('symbol') String symbol,
+    // Supported resolution includes 1, 5, 15, 30, 60, D, W, M .Some timeframes might not be available depending on the exchange.
+    @Query('resolution') String resolution,
   });
 }

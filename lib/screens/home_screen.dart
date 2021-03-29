@@ -22,10 +22,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Row(
-        children: [
-          if (companyProfile != null) CompanyProfileWidget(companyProfile: companyProfile,),
-        ],
+      body: SingleChildScrollView(
+        child: Row(
+          children: [
+            if (companyProfile != null) CompanyProfileWidget(companyProfile: companyProfile,),
+          ],
+        ),
       ),
     );
   }
