@@ -15,7 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     final api = serviceLocator.get<FinHubApi>();
-    api.getCompanyProfile(token: apiKey, symbol: 'NVDA').then((value) => setState(() => companyProfile = value));
+    api.getCompanyProfile(token: Constants.apiKey, symbol: 'NVDA').then((value) => setState(() => companyProfile = value));
     super.initState();
   }
   @override

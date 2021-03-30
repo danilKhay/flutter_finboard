@@ -2,10 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 
 import '../../entities/entities.dart';
+import '../../utils/constants.dart';
 
 part 'finhub_api.g.dart';
 
-@RestApi(baseUrl: 'https://finnhub.io/api/v1')
+@RestApi(baseUrl: Constants.finnHubBaseUrl)
 abstract class FinHubApi {
   factory FinHubApi(Dio dio, {String baseUrl}) = _FinHubApi;
 
