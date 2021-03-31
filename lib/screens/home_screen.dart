@@ -14,18 +14,57 @@ class _HomeScreenState extends State<HomeScreen> {
   CompanyProfile companyProfile;
   @override
   void initState() {
+    super.initState();
     final api = serviceLocator.get<FinHubApi>();
     api.getCompanyProfile(token: Constants.apiKey, symbol: 'NVDA').then((value) => setState(() => companyProfile = value));
-    super.initState();
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: SingleChildScrollView(
+      body: SafeArea(
         child: Row(
           children: [
-            if (companyProfile != null) CompanyProfileWidget(companyProfile: companyProfile,),
+            Expanded(flex: 3, child: Column(
+              children: [
+                Expanded(flex: 1, child: Row(
+                  children: [
+                    Expanded(child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Placeholder(),
+                    )),
+                    Expanded(child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Placeholder(),
+                    )),
+                  ],
+                ),),
+                Expanded(flex: 2, child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Placeholder(),
+                )),
+              ],
+            ),),
+            Expanded(flex: 1, child: Column(
+              children: [
+                if (companyProfile != null) Expanded(child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CompanyProfileWidget(companyProfile: companyProfile,),
+                )),
+                if (companyProfile == null) Expanded(child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Placeholder(),
+                )),
+                Expanded(child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Placeholder(),
+                )),
+                Expanded(child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Placeholder(),
+                )),
+              ],
+            ),),
           ],
         ),
       ),

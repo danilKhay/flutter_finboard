@@ -9,16 +9,15 @@ class CompanyProfileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 270,
-      width: 300,
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 2,
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -39,72 +38,71 @@ class CompanyProfileWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 10,),
-              Expanded(
-                child: Row(
-                  children: [
-                    const Text('Website:'),
-                    const SizedBox(width: 10,),
-                    SelectableText(companyProfile.weburl)
-                  ],
-                ),
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  const Text('Website:'),
+                  const SizedBox(width: 10,),
+                  SelectableText(companyProfile.weburl)
+                ],
               ),
-              Expanded(
-                child: Row(
-                  children: [
-                    const Text('Exchange:'),
-                    const SizedBox(width: 10,),
-                    Expanded(child: Text(companyProfile.exchange)),
-                  ],
-                ),
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  const Text('Exchange:'),
+                  const SizedBox(width: 10,),
+                  Expanded(child: Text(companyProfile.exchange)),
+                ],
               ),
-              Expanded(
-                child: Row(
-                  children: [
-                    const Text('Market Cap:'),
-                    const SizedBox(width: 10,),
-                    Text('${companyProfile.marketCapitalization} millions ${companyProfile.currency}'),
-                  ],
-                ),
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  const Text('Market Cap:'),
+                  const SizedBox(width: 10,),
+                  Text('${companyProfile.marketCapitalization} millions ${companyProfile.currency}'),
+                ],
               ),
-              Expanded(
-                child: Row(
-                  children: [
-                    const Text('Industry:'),
-                    const SizedBox(width: 10,),
-                    Text(companyProfile.finnhubIndustry),
-                  ],
-                ),
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  const Text('Industry:'),
+                  const SizedBox(width: 10,),
+                  Text(companyProfile.finnhubIndustry),
+                ],
               ),
-              Expanded(
-                child: Row(
-                  children: [
-                    const Text('IPO date:'),
-                    const SizedBox(width: 10,),
-                    Text(companyProfile.ipo),
-                  ],
-                ),
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  const Text('IPO date:'),
+                  const SizedBox(width: 10,),
+                  Text(companyProfile.ipo),
+                ],
               ),
-              Expanded(
-                child: Row(
-                  children: [
-                    const Text('Country:'),
-                    const SizedBox(width: 10,),
-                    Text(companyProfile.country),
-                  ],
-                ),
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  const Text('Country:'),
+                  const SizedBox(width: 10,),
+                  Text(companyProfile.country),
+                ],
               ),
-              Expanded(
-                child: Row(
-                  children: [
-                    const Text('Share Outstanding:'),
-                    const SizedBox(width: 10,),
-                    Text('${companyProfile.shareOutstanding.toString()} millions'),
-                  ],
-                ),
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  const Text('Share Outstanding:'),
+                  const SizedBox(width: 10,),
+                  Text('${companyProfile.shareOutstanding.toString()} millions'),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
