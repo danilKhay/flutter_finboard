@@ -4,9 +4,10 @@ import '../../utils/constants.dart';
 
 class BasicRestService {
 
-  final dio = Dio();
+  Dio dio;
 
-  BasicRestService() {
+  BasicRestService(Dio dio) {
+    this.dio = dio;
     this.dio
         ..options.connectTimeout = Constants.restConnectionTimeout
         ..options.sendTimeout = Constants.restSendTimeout
@@ -21,7 +22,7 @@ class BasicRestService {
   }
 
   void _configureHeader() {
-    this.dio.options.headers['X-Finnhub-Token'] = Constants.apiKey;
+    // this.dio.options.headers['X-Finnhub-Token'] = Constants.apiKey;
   }
 
   void _catch(Exception exception) {

@@ -1,6 +1,7 @@
 import 'package:finboard_app/models/resolution.dart';
 import 'package:finboard_app/services/api/finhub_api.dart';
 import 'package:finboard_app/services/basic/basic_rest_service.dart';
+import 'package:dio/dio.dart';
 
 import '../../entities/entities.dart';
 import '../../utils/constants.dart';
@@ -8,8 +9,8 @@ import '../../utils/constants.dart';
 class FinnhubRestService extends BasicRestService {
   FinHubApi _finHubApi;
 
-  FinnhubRestService() {
-    _finHubApi = FinHubApi(dio);
+  FinnhubRestService(Dio dio, FinHubApi finHubApi) : super(dio) {
+    _finHubApi = finHubApi;
   }
 
   //REST API Requests
