@@ -1,8 +1,6 @@
 import 'package:finboard_app/di/service_locator.dart';
-import 'package:finboard_app/entities/company_profile.dart';
+import 'package:finboard_app/models/company_profile_model.dart';
 import 'package:finboard_app/repositories/company_repository.dart';
-import 'package:finboard_app/services/api/finhub_api.dart';
-import 'package:finboard_app/utils/constants.dart';
 import 'package:finboard_app/widgets/charts/column_chart.dart';
 import 'package:finboard_app/widgets/charts/open_close_chart.dart';
 import 'package:finboard_app/widgets/charts/range_chart.dart';
@@ -16,12 +14,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  CompanyProfile companyProfile;
+  CompanyProfileModel _cp;
   @override
   void initState() {
     super.initState();
     final repo = serviceLocator.get<CompanyRepository>();
-    repo.getCompanyProfile('AAPL').then((value) => setState(() => companyProfile = value));
+    repo.getCompanyProfile('AAPL').then((value) => setState(() => _cp = value));
   }
   @override
   Widget build(BuildContext context) {
@@ -52,11 +50,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ),),
             Expanded(flex: 1, child: Column(
               children: [
-                if (companyProfile != null) Expanded(child: Padding(
+                if (_cp != null) Expanded(child: Padding(
                   padding: const EdgeInsets.all(2.0),
-                  child: CompanyProfileWidget(companyProfile: companyProfile,),
+                  child: CompanyProfileWidget(cp: _cp,),
                 )),
-                if (companyProfile == null) Expanded(child: Padding(
+                if (_cp == null) Expanded(child: Padding(
                   padding: const EdgeInsets.all(2.0),
                   child: Card(child: Loading(),),
                 )),
@@ -69,7 +67,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Card(child: Loading(),),
                 )),
               ],
-            ),),
+            ),
+            ),
           ],
         ),
       ),

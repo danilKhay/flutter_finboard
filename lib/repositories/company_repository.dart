@@ -1,4 +1,4 @@
-import 'package:finboard_app/entities/company_profile.dart';
+import 'package:finboard_app/models/company_profile_model.dart';
 import 'package:finboard_app/services/finnhub_rest_service/finnhub_rest_service.dart';
 
 class CompanyRepository {
@@ -6,8 +6,8 @@ class CompanyRepository {
 
   CompanyRepository(this._finnhubRestService);
 
-  Future<CompanyProfile> getCompanyProfile(String symbol) async {
+  Future<CompanyProfileModel> getCompanyProfile(String symbol) async {
     final companyProfile = await _finnhubRestService.getCompanyProfile(symbol);
-    return companyProfile;
+    return CompanyProfileModel.fromEntity(companyProfile);
   }
 }

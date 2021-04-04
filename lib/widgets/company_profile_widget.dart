@@ -1,10 +1,10 @@
-import 'package:finboard_app/entities/entities.dart';
+import 'package:finboard_app/models/company_profile_model.dart';
 import 'package:flutter/material.dart';
 
 class CompanyProfileWidget extends StatelessWidget {
-  final CompanyProfile companyProfile;
+  final CompanyProfileModel cp;
 
-  const CompanyProfileWidget({Key key, @required this.companyProfile})
+  const CompanyProfileWidget({Key key, @required this.cp})
       : super(key: key);
 
   @override
@@ -22,7 +22,7 @@ class CompanyProfileWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Image.network(
-                    "https://logo.clearbit.com/${companyProfile.weburl.substring(12)}",
+                    "https://logo.clearbit.com/${cp.webUrl.substring(12)}",
                     fit: BoxFit.contain,
                     width: 80,
                     height: 80,
@@ -32,7 +32,7 @@ class CompanyProfileWidget extends StatelessWidget {
                   ),
                   Expanded(
                     child: Text(
-                      '${companyProfile.name} (${companyProfile.ticker})',
+                      cp.name,
                       style: Theme.of(context).textTheme.headline5,
                     ),
                   ),
@@ -44,7 +44,7 @@ class CompanyProfileWidget extends StatelessWidget {
                 children: [
                   const Text('Website:'),
                   const SizedBox(width: 10,),
-                  SelectableText(companyProfile.weburl)
+                  SelectableText(cp.webUrl)
                 ],
               ),
             ),
@@ -53,7 +53,7 @@ class CompanyProfileWidget extends StatelessWidget {
                 children: [
                   const Text('Exchange:'),
                   const SizedBox(width: 10,),
-                  Expanded(child: Text(companyProfile.exchange)),
+                  Expanded(child: Text(cp.exchange)),
                 ],
               ),
             ),
@@ -62,7 +62,7 @@ class CompanyProfileWidget extends StatelessWidget {
                 children: [
                   const Text('Market Cap:'),
                   const SizedBox(width: 10,),
-                  Text('${companyProfile.marketCapitalization} millions ${companyProfile.currency}'),
+                  Text(cp.marketCap),
                 ],
               ),
             ),
@@ -71,7 +71,7 @@ class CompanyProfileWidget extends StatelessWidget {
                 children: [
                   const Text('Industry:'),
                   const SizedBox(width: 10,),
-                  Text(companyProfile.finnhubIndustry),
+                  Text(cp.industry),
                 ],
               ),
             ),
@@ -80,7 +80,7 @@ class CompanyProfileWidget extends StatelessWidget {
                 children: [
                   const Text('IPO date:'),
                   const SizedBox(width: 10,),
-                  Text(companyProfile.ipo),
+                  Text(cp.ipoDate),
                 ],
               ),
             ),
@@ -89,7 +89,7 @@ class CompanyProfileWidget extends StatelessWidget {
                 children: [
                   const Text('Country:'),
                   const SizedBox(width: 10,),
-                  Text(companyProfile.country),
+                  Text(cp.country),
                 ],
               ),
             ),
@@ -98,7 +98,7 @@ class CompanyProfileWidget extends StatelessWidget {
                 children: [
                   const Text('Share Outstanding:'),
                   const SizedBox(width: 10,),
-                  Text('${companyProfile.shareOutstanding.toString()} millions'),
+                  Text(cp.share),
                 ],
               ),
             ),
