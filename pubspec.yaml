@@ -31,6 +31,7 @@ dependencies:
   provider: ^5.0.0
   syncfusion_flutter_charts: ^19.1.54+1
   syncfusion_flutter_gauges: ^19.1.54
+  dartz: ^0.9.2
 
 dev_dependencies:
   flutter_test:

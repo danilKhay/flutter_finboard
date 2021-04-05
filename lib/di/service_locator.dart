@@ -7,8 +7,14 @@ import 'package:dio/dio.dart';
 final serviceLocator = GetIt.instance;
 
 void setup() {
-  serviceLocator.registerLazySingleton<Dio>(() => Dio(), instanceName: 'FinnHubDio');
-  serviceLocator.registerLazySingleton<FinHubApi>(() => FinHubApi(serviceLocator<Dio>(instanceName: 'FinnHubDio')));
-  serviceLocator.registerLazySingleton<FinnhubRestService>(() => FinnhubRestService(serviceLocator<Dio>(instanceName: 'FinnHubDio'), serviceLocator<FinHubApi>()));
-  serviceLocator..registerFactory<CompanyRepository>(() => CompanyRepository(serviceLocator<FinnhubRestService>()));
+  serviceLocator.registerLazySingleton<Dio>(() => Dio(),
+      instanceName: 'FinnHubDio');
+  serviceLocator.registerLazySingleton<FinHubApi>(
+      () => FinHubApi(serviceLocator<Dio>(instanceName: 'FinnHubDio')));
+  serviceLocator.registerLazySingleton<FinnhubRestService>(() =>
+      FinnhubRestService(serviceLocator<Dio>(instanceName: 'FinnHubDio'),
+          serviceLocator<FinHubApi>()));
+  serviceLocator
+    ..registerFactory<CompanyRepository>(
+        () => CompanyRepository(serviceLocator<FinnhubRestService>()));
 }
