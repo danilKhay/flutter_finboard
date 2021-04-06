@@ -19,7 +19,7 @@ class CompanyRepository {
     }
   }
 
-  Future<Either<Failure, List<CompanyNews>>> getCompanyNews(String symbol, DateTime fromDate, DateTime toDate) async{
+  Future<Either<Failure, List<CompanyNews>>> getCompanyNews(String symbol, DateTime fromDate, DateTime toDate) async {
     try {
       final companyNews = await _finnhubRestService.getCompanyNews(symbol, fromDate.toFinnHubString(), toDate.toFinnHubString());
       return right(companyNews);

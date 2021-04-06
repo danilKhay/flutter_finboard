@@ -1,6 +1,9 @@
 import 'package:finboard_app/di/service_locator.dart';
 import 'package:finboard_app/entities/entities.dart';
+import 'package:finboard_app/models/candle_chart_data.dart';
 import 'package:finboard_app/models/company_profile_model.dart';
+import 'package:finboard_app/models/resolution.dart';
+import 'package:finboard_app/repositories/chart_repository.dart';
 import 'package:finboard_app/repositories/company_repository.dart';
 import 'package:finboard_app/widgets/charts/column_chart.dart';
 import 'package:finboard_app/widgets/charts/open_close_chart.dart';
@@ -18,66 +21,135 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   CompanyProfileModel _cp;
   List<CompanyNews> _list;
+  CandlesModel _candlesModel;
+
   @override
   void initState() {
     super.initState();
     final repo = serviceLocator.get<CompanyRepository>();
-    repo.getCompanyProfile('AAPL').then((value) => setState(() => value.fold((l) => _cp = null, (r) => _cp = r)));
+    repo.getCompanyProfile('NVDA').then((value) =>
+        setState(() => value.fold((l) => _cp = null, (r) => _cp = r)));
     final today = DateTime.now();
     final fifteenDaysAgo = today.subtract(Duration(days: 15));
-    repo.getCompanyNews('AAPL', fifteenDaysAgo, today).then((value) => setState(() => value.fold((l) => _list = null, (r) => _list = r)));
+    repo.getCompanyNews('NVDA', fifteenDaysAgo, today).then((value) =>
+        setState(() => value.fold((l) => _list = null, (r) => _list = r)));
+    final fortyFiveDayAgo = today.subtract(Duration(days: 45));
+    final chartRepo = serviceLocator.get<ChartRepository>();
+    chartRepo
+        .getCandleChartData('NVDA', fortyFiveDayAgo, today, Resolution.DAY)
+        .then((value) => setState(() =>
+            value.fold((l) => _candlesModel = null, (r) => _candlesModel = r)));
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('FinBoard'),),
+      appBar: AppBar(
+        title: Text('FinBoard'),
+      ),
       body: SafeArea(
         child: Row(
           children: [
-            Expanded(flex: 3, child: Column(
-              children: [
-                Expanded(flex: 1, child: Row(
-                  children: [
-                    Expanded(child: Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: Card(child: Loading(),),
-                    )),
-                    Expanded(child: Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: Card(child: ColumnBack(Key('fsafa')),),
-                    )),
-                  ],
-                ),),
-                Expanded(flex: 2, child: Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: Card(child: HiloOpenCloseChart(Key('fsafsaf')),),
-                )),
-              ],
-            ),),
-            Expanded(flex: 1, child: Column(
-              children: [
-                if (_cp != null) Expanded(child: Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: CompanyProfileWidget(cp: _cp,),
-                )),
-                if (_cp == null) Expanded(child: Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: Card(child: Loading(),),
-                )),
-                Expanded(child: Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: Card(child: RangeDataLabelExample(Key('rearsar')),),
-                )),
-                if (_list == null) Expanded(flex: 2, child: Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: Card(child: Loading(),),
-                )),
-               if (_list != null) Expanded(flex: 2, child: Padding(
-                 padding: const EdgeInsets.all(2.0),
-                 child: Card(child: CompanyNewsListWidget(companyNewsList: _list,),),
-               )),
-              ],
+            Expanded(
+              flex: 3,
+              child: Column(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: Card(
+                            child: Loading(),
+                          ),
+                        )),
+                        Expanded(
+                            child: Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: Card(
+                            child: ColumnBack(Key('fsafa')),
+                          ),
+                        )),
+                      ],
+                    ),
+                  ),
+                  if (_candlesModel != null)
+                    Expanded(
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Card(
+                          child:
+                              HiloOpenCloseChart(Key('fsafsaf'), _candlesModel),
+                        ),
+                      ),
+                    ),
+                  if (_candlesModel == null)
+                    Expanded(
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Card(
+                          child: Center(
+                            child: Loading(),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ),
+            Expanded(
+              flex: 1,
+              child: Column(
+                children: [
+                  if (_cp != null)
+                    Expanded(
+                        child: Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: CompanyProfileWidget(
+                        cp: _cp,
+                      ),
+                    )),
+                  if (_cp == null)
+                    Expanded(
+                        child: Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: Card(
+                        child: Loading(),
+                      ),
+                    )),
+                  Expanded(
+                      child: Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: Card(
+                      child: RangeDataLabelExample(Key('rearsar')),
+                    ),
+                  )),
+                  if (_list == null)
+                    Expanded(
+                        flex: 2,
+                        child: Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: Card(
+                            child: Loading(),
+                          ),
+                        )),
+                  if (_list != null)
+                    Expanded(
+                        flex: 2,
+                        child: Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: Card(
+                            child: CompanyNewsListWidget(
+                              companyNewsList: _list,
+                            ),
+                          ),
+                        )),
+                ],
+              ),
             ),
           ],
         ),

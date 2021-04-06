@@ -64,6 +64,7 @@ class FinnhubRestService extends BasicRestService {
       String fromTime, String toTime) async {
     return _handleFuture<Candles>(_finHubApi.getCandles(
         token: Constants.apiKey,
+        symbol: symbol,
         resolution: fromResolutionToString(resolution),
         fromTime: fromTime,
         toTime: toTime));

@@ -1,3 +1,4 @@
+import 'package:finboard_app/repositories/chart_repository.dart';
 import 'package:finboard_app/repositories/company_repository.dart';
 import 'package:finboard_app/services/api/finhub_api.dart';
 import 'package:finboard_app/services/finnhub_rest_service/finnhub_rest_service.dart';
@@ -17,4 +18,7 @@ void setup() {
   serviceLocator
     ..registerFactory<CompanyRepository>(
         () => CompanyRepository(serviceLocator<FinnhubRestService>()));
+  serviceLocator
+    ..registerFactory<ChartRepository>(
+        () => ChartRepository(serviceLocator<FinnhubRestService>()));
 }
