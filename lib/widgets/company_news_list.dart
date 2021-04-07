@@ -1,5 +1,6 @@
 import 'package:finboard_app/entities/company_news.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CompanyNewsListWidget extends StatefulWidget {
   final List<CompanyNews> companyNewsList;
@@ -28,7 +29,10 @@ class _CompanyNewsListWidgetState extends State<CompanyNewsListWidget> {
               itemCount: list.length,
               itemBuilder: (context, index) {
                 final item = list[index];
-                return Card(child: ListTile(title: Text(item.headline), subtitle: Text(item.summary),));
+                return Card(child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: ListTile(title: Text(item.headline), subtitle: Text(item.summary), onTap: () => _launchURL(item.url),),
+                ));
               },
             ),
           ),
@@ -36,4 +40,7 @@ class _CompanyNewsListWidgetState extends State<CompanyNewsListWidget> {
       ],
     );
   }
+
+  void _launchURL(String url) async =>
+       await canLaunch(url) ? await launch(url) : throw 'Can\'t launch url: $url';
 }

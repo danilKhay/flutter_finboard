@@ -27,4 +27,13 @@ class CompanyRepository {
       return left(BasicFailure());
     }
   }
+
+  Future<Either<Failure, CompanyNewsSentiment>> getCompanyNewsSentiment(String symbol) async {
+    try {
+      final companyNewsSentiment = await _finnhubRestService.getCompanyNewsSentiment(symbol);
+      return right(companyNewsSentiment);
+    } catch(e) {
+      return left(BasicFailure());
+    }
+  }
 }

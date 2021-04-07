@@ -11,6 +11,7 @@ import 'package:finboard_app/widgets/charts/range_chart.dart';
 import 'package:finboard_app/widgets/company_news_list.dart';
 import 'package:finboard_app/widgets/company_profile_widget.dart';
 import 'package:finboard_app/widgets/loading.dart';
+import 'package:finboard_app/widgets/news_sentiment_widget.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -22,23 +23,28 @@ class _HomeScreenState extends State<HomeScreen> {
   CompanyProfileModel _cp;
   List<CompanyNews> _list;
   CandlesModel _candlesModel;
+  CompanyNewsSentiment _companyNewsSentiment;
 
   @override
   void initState() {
     super.initState();
+    final symbol = 'AMZN';
     final repo = serviceLocator.get<CompanyRepository>();
-    repo.getCompanyProfile('NVDA').then((value) =>
+    repo.getCompanyProfile(symbol).then((value) =>
         setState(() => value.fold((l) => _cp = null, (r) => _cp = r)));
     final today = DateTime.now();
     final fifteenDaysAgo = today.subtract(Duration(days: 15));
-    repo.getCompanyNews('NVDA', fifteenDaysAgo, today).then((value) =>
+    repo.getCompanyNews(symbol, fifteenDaysAgo, today).then((value) =>
         setState(() => value.fold((l) => _list = null, (r) => _list = r)));
     final fortyFiveDayAgo = today.subtract(Duration(days: 45));
     final chartRepo = serviceLocator.get<ChartRepository>();
     chartRepo
-        .getCandleChartData('NVDA', fortyFiveDayAgo, today, Resolution.DAY)
+        .getCandleChartData(symbol, fortyFiveDayAgo, today, Resolution.DAY)
         .then((value) => setState(() =>
             value.fold((l) => _candlesModel = null, (r) => _candlesModel = r)));
+    repo.getCompanyNewsSentiment(symbol).then((value) => setState(() =>
+        value.fold((l) => _companyNewsSentiment = null,
+            (r) => _companyNewsSentiment = r)));
   }
 
   @override
@@ -58,20 +64,40 @@ class _HomeScreenState extends State<HomeScreen> {
                     flex: 1,
                     child: Row(
                       children: [
-                        Expanded(
+                        if (_cp != null)
+                          Expanded(
                             child: Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Card(
-                            child: Loading(),
+                              padding: const EdgeInsets.all(2.0),
+                              child: CompanyProfileWidget(
+                                cp: _cp,
+                              ),
+                            ),
                           ),
-                        )),
-                        Expanded(
+                        if (_cp == null)
+                          Expanded(
                             child: Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Card(
-                            child: ColumnBack(Key('fsafa')),
+                              padding: const EdgeInsets.all(2.0),
+                              child: Card(
+                                child: Loading(),
+                              ),
+                            ),
                           ),
-                        )),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Card(
+                              child: Loading(),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Card(
+                              child: ColumnBack(Key('fsafa')),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -105,49 +131,46 @@ class _HomeScreenState extends State<HomeScreen> {
               flex: 1,
               child: Column(
                 children: [
-                  if (_cp != null)
+                  if (_companyNewsSentiment != null)
                     Expanded(
-                        child: Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: CompanyProfileWidget(
-                        cp: _cp,
-                      ),
-                    )),
-                  if (_cp == null)
-                    Expanded(
-                        child: Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: Card(
-                        child: Loading(),
-                      ),
-                    )),
-                  Expanded(
                       child: Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: Card(
-                      child: RangeDataLabelExample(Key('rearsar')),
+                        padding: const EdgeInsets.all(2.0),
+                        child: Card(
+                          child: NewsSentimentWidget(
+                            companyNewsSentiment: _companyNewsSentiment,
+                          ),
+                        ),
+                      ),
                     ),
-                  )),
+                  if (_companyNewsSentiment == null)
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Card(
+                          child: Loading(),
+                        ),
+                      ),
+                    ),
                   if (_list == null)
                     Expanded(
-                        flex: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Card(
-                            child: Loading(),
-                          ),
-                        )),
+                      child: Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Card(
+                          child: Loading(),
+                        ),
+                      ),
+                    ),
                   if (_list != null)
                     Expanded(
-                        flex: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Card(
-                            child: CompanyNewsListWidget(
-                              companyNewsList: _list,
-                            ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Card(
+                          child: CompanyNewsListWidget(
+                            companyNewsList: _list,
                           ),
-                        )),
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),

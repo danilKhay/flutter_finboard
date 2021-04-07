@@ -64,8 +64,8 @@ class Buzz {
 }
 
 class Sentiment {
-  int bearishPercent;
-  int bullishPercent;
+  double bearishPercent;
+  double bullishPercent;
 
   Sentiment({this.bearishPercent, this.bullishPercent});
 
