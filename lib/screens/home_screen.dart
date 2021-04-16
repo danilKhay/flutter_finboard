@@ -1,6 +1,7 @@
 import 'package:finboard_app/di/service_locator.dart';
 import 'package:finboard_app/entities/entities.dart';
 import 'package:finboard_app/models/candle_chart_data.dart';
+import 'package:finboard_app/models/column_chart_data.dart';
 import 'package:finboard_app/models/company_profile_model.dart';
 import 'package:finboard_app/models/resolution.dart';
 import 'package:finboard_app/repositories/chart_repository.dart';
@@ -24,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<CompanyNews> _list;
   CandlesModel _candlesModel;
   CompanyNewsSentiment _companyNewsSentiment;
+  List<ColumnChartData> _columnList;
 
   @override
   void initState() {
@@ -45,6 +47,9 @@ class _HomeScreenState extends State<HomeScreen> {
     repo.getCompanyNewsSentiment(symbol).then((value) => setState(() =>
         value.fold((l) => _companyNewsSentiment = null,
             (r) => _companyNewsSentiment = r)));
+    chartRepo
+        .getColumnChartData(symbol).then((value) => setState(() => value.fold((l) => _columnList = null, (r) => _columnList = r)));
+
   }
 
   @override
@@ -90,14 +95,24 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: Card(
-                              child: ColumnBack(Key('fsafa')),
+                        if (_columnList == null)
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Card(
+                                child: Loading(),
+                              ),
                             ),
                           ),
-                        ),
+                        if (_columnList != null)
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Card(
+                                child: ColumnBack(Key('fsafa'), _columnList,),
+                              ),
+                            ),
+                          ),
                       ],
                     ),
                   ),

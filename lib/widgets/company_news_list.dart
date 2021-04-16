@@ -29,16 +29,25 @@ class _CompanyNewsListWidgetState extends State<CompanyNewsListWidget> {
               itemCount: list.length,
               itemBuilder: (context, index) {
                 final item = list[index];
-                return Card(child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: ListTile(title: Text(item.headline), subtitle: Text(item.summary), onTap: () => _launchURL(item.url),),
-                ));
+                return buildListItem(item);
               },
             ),
           ),
         ),
       ],
     );
+  }
+
+  Card buildListItem(CompanyNews item) {
+    return Card(
+        child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: ListTile(
+        title: Text(item.headline),
+        subtitle: Text(item.summary),
+        onTap: () => _launchURL(item.url),
+      ),
+    ));
   }
 
   void _launchURL(String url) async =>

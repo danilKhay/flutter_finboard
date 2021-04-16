@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:dartz/dartz.dart';
 import 'package:finboard_app/core/error/failures.dart';
 import 'package:finboard_app/models/candle_chart_data.dart';
+import 'package:finboard_app/models/column_chart_data.dart';
 import 'package:finboard_app/models/resolution.dart';
 import 'package:finboard_app/services/finnhub_rest_service/finnhub_rest_service.dart';
 import 'package:finboard_app/utils/utils.dart';
@@ -28,7 +29,8 @@ class ChartRepository {
 
         for (int i = 0; i < opens.length; i++) {
           //TODO: Add other durations
-          list.add(CandleChartData(fromDate.add(Duration(days: i)), opens[i], closes[i], highs[i], lows[i]));
+          list.add(CandleChartData(fromDate.add(Duration(days: i)), opens[i],
+              closes[i], highs[i], lows[i]));
         }
 
         return right(CandlesModel(list, symbol, maxPrice, minPrice));
@@ -40,5 +42,19 @@ class ChartRepository {
     }
   }
 
-
+  Future<Either<Failure, List<ColumnChartData>>> getColumnChartData(
+      String symbol) async {
+    try {
+      final list = await _finnhubRestService.getRecommendation(symbol);
+      return right(list
+          .map((e) => ColumnChartData(
+              e.period, e.buy, e.sell, e.hold, e.strongBuy, e.strongSell))
+          .toList()
+          .sublist(0, 5)
+          .reversed
+          .toList());
+    } catch (e) {
+      return left(BasicFailure());
+    }
+  }
 }
