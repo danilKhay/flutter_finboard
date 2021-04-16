@@ -35,6 +35,7 @@ class _ColumnBackState extends State<ColumnBack> {
           majorGridLines: MajorGridLines(width: 0),
         ),
         primaryYAxis: NumericAxis(
+            minimum: 0.0,
             majorTickLines: MajorTickLines(size: 0),
             numberFormat: NumberFormat.compact(),
             majorGridLines: MajorGridLines(width: 0),
