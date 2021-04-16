@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    final symbol = 'AMZN';
+    final symbol = 'TSLA';
     final repo = serviceLocator.get<CompanyRepository>();
     repo.getCompanyProfile(symbol).then((value) =>
         setState(() => value.fold((l) => _cp = null, (r) => _cp = r)));
