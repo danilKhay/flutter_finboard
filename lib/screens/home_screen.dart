@@ -55,9 +55,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('FinBoard'),
-      ),
+      // appBar: AppBar(
+      //   title: Text('FinBoard'),
+      // ),
       body: SafeArea(
         child: Row(
           children: [

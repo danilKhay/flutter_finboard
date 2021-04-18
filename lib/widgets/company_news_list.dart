@@ -20,7 +20,7 @@ class _CompanyNewsListWidgetState extends State<CompanyNewsListWidget> {
       children: [
         Padding(
           padding: const EdgeInsets.only(top: 8.0),
-          child: Text('Last News', style: Theme.of(context).textTheme.headline5,),
+          child: Text('Last News', style: Theme.of(context).textTheme.headline6,),
         ),
         Divider(),
         Expanded(

@@ -16,16 +16,16 @@ class NewsSentimentWidget extends StatelessWidget {
           padding: const EdgeInsets.only(top: 8.0),
           child: Text(
             'News Sentiment',
-            style: Theme.of(context).textTheme.headline5,
+            style: Theme.of(context).textTheme.headline6,
           ),
         ),
         Divider(),
         Expanded(
-          child: Column(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Column(
+              children: [
+                Expanded(
                   child: Row(
                     children: [
                       Expanded(
@@ -35,7 +35,7 @@ class NewsSentimentWidget extends StatelessWidget {
                               child: _buildElevationDoughnutChart(
                                   companyNewsSentiment.companyNewsScore),
                             ),
-                            Text('Company News Score'),
+                            Text('Company\'s News\nScore', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
                           ],
                         ),
                       ),
@@ -47,17 +47,14 @@ class NewsSentimentWidget extends StatelessWidget {
                                   companyNewsSentiment
                                       .sentiment.bullishPercent),
                             ),
-                            Text('Company Bullish Percent'),
+                            Text('Company\'s Bullish\nPercent', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
                           ],
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 16.0),
+                Expanded(
                   child: Row(
                     children: [
                       Expanded(
@@ -67,7 +64,7 @@ class NewsSentimentWidget extends StatelessWidget {
                               child: _buildElevationDoughnutChart(
                                   companyNewsSentiment.sectorAverageNewsScore),
                             ),
-                            Text('Sector Average News Score'),
+                            Text('Sector Average\nNews Score', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
                           ],
                         ),
                       ),
@@ -79,15 +76,15 @@ class NewsSentimentWidget extends StatelessWidget {
                                   companyNewsSentiment
                                       .sectorAverageBullishPercent),
                             ),
-                            Text('Sector Average Bullish Percent'),
+                            Text('Sector Average\nBullish Percent', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
                           ],
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],
@@ -116,7 +113,7 @@ class NewsSentimentWidget extends StatelessWidget {
             widget: Center(
               child: FittedBox(
                 child: Text('${(percentage * 100).toStringAsFixed(2)}%',
-                    style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5))),
+                    style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.bold)),
               ),
             ))
       ],
@@ -133,7 +130,7 @@ class NewsSentimentWidget extends StatelessWidget {
       ChartData(
           x: 'A',
           y: firstPercentage,
-          pointColor: const Color.fromRGBO(0, 220, 252, 1)),
+          pointColor: const Color.fromRGBO(0, 0, 0, 1)),
       ChartData(
           x: 'B',
           y: secondPercentage,
