@@ -33,17 +33,15 @@ class _HiloOpenCloseChartState extends State<HiloOpenCloseChart> {
       title: ChartTitle(text: widget.candlesModel.symbol),
       primaryXAxis: DateTimeAxis(
           dateFormat: DateFormat.yMMMd(),
-          // interval: 3,
-          intervalType: DateTimeIntervalType.days,
-          // minimum: DateTime(2016, 01, 01),
-          // maximum: DateTime(2017, 01, 01),
-          majorGridLines: MajorGridLines(width: 0)),
+          interval: 5,
+          intervalType: DateTimeIntervalType.auto,
+          majorGridLines: MajorGridLines(width: 1)),
       primaryYAxis: NumericAxis(
           minimum: widget.candlesModel.minPrice - distance * 0.1,
           maximum: widget.candlesModel.maxPrice + distance * 0.1,
           interval: distance * 0.1 ,
           labelFormat: '\${value}',
-          axisLine: AxisLine(width: 0)),
+          axisLine: AxisLine(width: 1)),
       series: _getHiloOpenCloseSeries(),
       trackballBehavior: _trackballBehavior,
     );
@@ -54,9 +52,10 @@ class _HiloOpenCloseChartState extends State<HiloOpenCloseChart> {
   _getHiloOpenCloseSeries() {
     return <HiloOpenCloseSeries<CandleChartData, DateTime>>[
       HiloOpenCloseSeries<CandleChartData, DateTime>(
+          emptyPointSettings: EmptyPointSettings(mode: EmptyPointMode.zero),
           dataSource: widget.candlesModel.candles,
           name: widget.candlesModel.symbol,
-          showIndicationForSameValues: true,
+          // showIndicationForSameValues: true,
           xValueMapper: (CandleChartData sales, _) => sales.date,
 
           /// High, low, open and close values used to render the HLOC series.

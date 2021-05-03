@@ -11,3 +11,7 @@ extension UnixString on DateTime {
     return formatter.format(utc);
   }
 }
+
+DateTime fromUnixString(int timestamp) {
+  return DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+}

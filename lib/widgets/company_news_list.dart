@@ -1,4 +1,5 @@
 import 'package:finboard_app/entities/company_news.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -40,14 +41,14 @@ class _CompanyNewsListWidgetState extends State<CompanyNewsListWidget> {
 
   Card buildListItem(CompanyNews item) {
     return Card(
-        child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: ListTile(
-        title: Text(item.headline),
-        subtitle: Text(item.summary),
-        onTap: () => _launchURL(item.url),
-      ),
-    ));
+      color: Colors.grey.shade900,
+      margin: EdgeInsets.all(4),
+        child: ListTile(
+          contentPadding: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+          title: Text(item.headline),
+          subtitle: Text(item.summary, maxLines: 7, overflow: TextOverflow.ellipsis,),
+          onTap: () => _launchURL(item.url),
+        ));
   }
 
   void _launchURL(String url) async =>

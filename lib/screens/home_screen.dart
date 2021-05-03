@@ -1,11 +1,13 @@
 import 'package:finboard_app/di/service_locator.dart';
 import 'package:finboard_app/entities/entities.dart';
+import 'package:finboard_app/models/aggregate_chart_data.dart';
 import 'package:finboard_app/models/candle_chart_data.dart';
 import 'package:finboard_app/models/column_chart_data.dart';
 import 'package:finboard_app/models/company_profile_model.dart';
 import 'package:finboard_app/models/resolution.dart';
 import 'package:finboard_app/repositories/chart_repository.dart';
 import 'package:finboard_app/repositories/company_repository.dart';
+import 'package:finboard_app/widgets/charts/aggregate_pie_chart.dart';
 import 'package:finboard_app/widgets/charts/column_chart.dart';
 import 'package:finboard_app/widgets/charts/open_close_chart.dart';
 import 'package:finboard_app/widgets/charts/range_chart.dart';
@@ -26,6 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
   CandlesModel _candlesModel;
   CompanyNewsSentiment _companyNewsSentiment;
   List<ColumnChartData> _columnList;
+  List<AggregateChartData> _aggregateList;
 
   @override
   void initState() {
@@ -35,13 +38,13 @@ class _HomeScreenState extends State<HomeScreen> {
     repo.getCompanyProfile(symbol).then((value) =>
         setState(() => value.fold((l) => _cp = null, (r) => _cp = r)));
     final today = DateTime.now();
-    final fifteenDaysAgo = today.subtract(Duration(days: 15));
-    repo.getCompanyNews(symbol, fifteenDaysAgo, today).then((value) =>
+    final sevenDaysAgo = today.subtract(Duration(days: 7));
+    repo.getCompanyNews(symbol, sevenDaysAgo, today).then((value) =>
         setState(() => value.fold((l) => _list = null, (r) => _list = r)));
-    final fortyFiveDayAgo = today.subtract(Duration(days: 45));
+    final sixtyDaysAgo = today.subtract(Duration(days: 60));
     final chartRepo = serviceLocator.get<ChartRepository>();
     chartRepo
-        .getCandleChartData(symbol, fortyFiveDayAgo, today, Resolution.DAY)
+        .getCandleChartData(symbol, sixtyDaysAgo, today, Resolution.DAY)
         .then((value) => setState(() =>
             value.fold((l) => _candlesModel = null, (r) => _candlesModel = r)));
     repo.getCompanyNewsSentiment(symbol).then((value) => setState(() =>
@@ -49,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
             (r) => _companyNewsSentiment = r)));
     chartRepo
         .getColumnChartData(symbol).then((value) => setState(() => value.fold((l) => _columnList = null, (r) => _columnList = r)));
-
+    chartRepo.getAggregateChartData(symbol, Resolution.DAY).then((value) => setState(() => value.fold((l) => _aggregateList = null, (r) => _aggregateList = r)));
   }
 
   @override
@@ -87,11 +90,24 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                           ),
+                        if (_aggregateList == null)
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Card(
+                                child: Loading(),
+                              ),
+                            ),
+                          ),
+                        if (_aggregateList != null)
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: Card(
-                              child: Loading(),
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 4.0),
+                                child: SemiPieChart(Key('fsag'), _aggregateList),
+                              ),
                             ),
                           ),
                         ),

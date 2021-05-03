@@ -2,11 +2,13 @@ import 'dart:math';
 
 import 'package:dartz/dartz.dart';
 import 'package:finboard_app/core/error/failures.dart';
+import 'package:finboard_app/models/aggregate_chart_data.dart';
 import 'package:finboard_app/models/candle_chart_data.dart';
 import 'package:finboard_app/models/column_chart_data.dart';
 import 'package:finboard_app/models/resolution.dart';
 import 'package:finboard_app/services/finnhub_rest_service/finnhub_rest_service.dart';
 import 'package:finboard_app/utils/utils.dart';
+import 'package:flutter/material.dart';
 
 class ChartRepository {
   final FinnhubRestService _finnhubRestService;
@@ -18,18 +20,18 @@ class ChartRepository {
     try {
       final candles = await _finnhubRestService.getCandles(
           symbol, resolution, fromDate.toUnixString(), toDate.toUnixString());
-      if (candles.s == 'ok') {
-        final maxPrice = candles.h.reduce(max);
-        final minPrice = candles.l.reduce(min);
+      if (candles.status == 'ok') {
+        final maxPrice = candles.highPrice.reduce(max);
+        final minPrice = candles.lowPrice.reduce(min);
         final List<CandleChartData> list = [];
-        final opens = candles.o;
-        final closes = candles.c;
-        final lows = candles.l;
-        final highs = candles.h;
+        final opens = candles.openPrice;
+        final closes = candles.closePrice;
+        final lows = candles.lowPrice;
+        final highs = candles.highPrice;
+        final timestamp = candles.timestamp;
 
-        for (int i = 0; i < opens.length; i++) {
-          //TODO: Add other durations
-          list.add(CandleChartData(fromDate.add(Duration(days: i)), opens[i],
+        for (int i = 0; i < timestamp.length; i++) {
+          list.add(CandleChartData(fromUnixString(timestamp[i]), opens[i],
               closes[i], highs[i], lows[i]));
         }
 
@@ -53,6 +55,22 @@ class ChartRepository {
           .sublist(0, 5)
           .reversed
           .toList());
+    } catch (e) {
+      return left(BasicFailure());
+    }
+  }
+
+  Future<Either<Failure, List<AggregateChartData>>> getAggregateChartData(String symbol, Resolution resolution) async {
+    try {
+      final result = await _finnhubRestService.getAggregateIndicators(symbol, resolution);
+      final count = result.technicalAnalysis.count;
+      return right(
+        [
+          AggregateChartData('Buy', count.buy, Colors.greenAccent),
+          AggregateChartData('Sell', count.sell, Colors.redAccent),
+          AggregateChartData('Neutral', count.neutral, Colors.amberAccent),
+        ]
+      );
     } catch (e) {
       return left(BasicFailure());
     }
