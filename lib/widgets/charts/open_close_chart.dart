@@ -29,6 +29,7 @@ class _HiloOpenCloseChartState extends State<HiloOpenCloseChart> {
   SfCartesianChart _buildHiloOpenClose() {
     final distance = widget.candlesModel.maxPrice - widget.candlesModel.minPrice;
     return SfCartesianChart(
+      margin: EdgeInsets.all(2),
       plotAreaBorderWidth: 0,
       title: ChartTitle(text: widget.candlesModel.symbol),
       primaryXAxis: DateTimeAxis(
@@ -48,21 +49,22 @@ class _HiloOpenCloseChartState extends State<HiloOpenCloseChart> {
   }
 
   ///Get the hilo open close series
-  List<HiloOpenCloseSeries<CandleChartData, DateTime>>
+  List<CartesianSeries<CandleChartData, DateTime>>
   _getHiloOpenCloseSeries() {
-    return <HiloOpenCloseSeries<CandleChartData, DateTime>>[
+    return <CartesianSeries<CandleChartData, DateTime>>[
+
       HiloOpenCloseSeries<CandleChartData, DateTime>(
+          bearColor: Colors.red,
+          bullColor: Colors.green,
           emptyPointSettings: EmptyPointSettings(mode: EmptyPointMode.zero),
           dataSource: widget.candlesModel.candles,
           name: widget.candlesModel.symbol,
-          // showIndicationForSameValues: true,
           xValueMapper: (CandleChartData sales, _) => sales.date,
-
           /// High, low, open and close values used to render the HLOC series.
           lowValueMapper: (CandleChartData sales, _) => sales.low,
           highValueMapper: (CandleChartData sales, _) => sales.high,
           openValueMapper: (CandleChartData sales, _) => sales.open,
-          closeValueMapper: (CandleChartData sales, _) => sales.close)
+          closeValueMapper: (CandleChartData sales, _) => sales.close),
     ];
   }
 

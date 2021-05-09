@@ -27,8 +27,10 @@ class _ColumnBackState extends State<ColumnBack> {
 
   SfCartesianChart _buildBackColumnChart() {
     return SfCartesianChart(
+        margin: EdgeInsets.all(2),
+
         plotAreaBorderWidth: 0,
-        enableSideBySideSeriesPlacement: false,
+        enableSideBySideSeriesPlacement: true,
         title: ChartTitle(
             text: 'Recommendation Trends'),
         primaryXAxis: CategoryAxis(
@@ -50,35 +52,35 @@ class _ColumnBackState extends State<ColumnBack> {
       ColumnSeries<ColumnChartData, String>(
         color: Colors.greenAccent,
           dataSource: chartData,
-          width: 0.9,
+          width: 0.8,
           xValueMapper: (ColumnChartData data, _) => data.period,
           yValueMapper: (ColumnChartData data, _) => data.buy,
           name: 'Buy'),
       ColumnSeries<ColumnChartData, String>(
           color: Colors.green,
           dataSource: chartData,
-          width: 0.75,
+          width: 0.8,
           xValueMapper: (ColumnChartData data, _) => data.period,
           yValueMapper: (ColumnChartData data, _) => data.strongBuy,
           name: 'Strong Buy'),
       ColumnSeries<ColumnChartData, String>(
         color: Colors.amberAccent,
           dataSource: chartData,
-          width: 0.6,
+          width: 0.8,
           xValueMapper: (ColumnChartData data, _) => data.period,
           yValueMapper: (ColumnChartData data, _) => data.hold,
           name: 'Hold'),
       ColumnSeries<ColumnChartData, String>(
         color: Colors.orange,
           dataSource: chartData,
-          width: 0.45,
+          width: 0.8,
           xValueMapper: (ColumnChartData data, _) => data.period,
           yValueMapper: (ColumnChartData data, _) => data.sell,
           name: 'Sell'),
       ColumnSeries<ColumnChartData, String>(
         color: Colors.red,
           dataSource: chartData,
-          width: 0.3,
+          width: 0.8,
           xValueMapper: (ColumnChartData data, _) => data.period,
           yValueMapper: (ColumnChartData data, _) => data.strongSell,
           name: 'Strong Sell'),
