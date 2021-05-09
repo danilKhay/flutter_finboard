@@ -5,6 +5,7 @@ import 'package:finboard_app/core/error/failures.dart';
 import 'package:finboard_app/models/aggregate_chart_data.dart';
 import 'package:finboard_app/models/candle_chart_data.dart';
 import 'package:finboard_app/models/column_chart_data.dart';
+import 'package:finboard_app/models/res_sup_model.dart';
 import 'package:finboard_app/models/resolution.dart';
 import 'package:finboard_app/services/finnhub_rest_service/finnhub_rest_service.dart';
 import 'package:finboard_app/utils/utils.dart';
@@ -71,6 +72,26 @@ class ChartRepository {
           AggregateChartData('Neutral', count.neutral, Colors.amberAccent),
         ]
       );
+    } catch (e) {
+      return left(BasicFailure());
+    }
+  }
+
+  Future<Either<Failure, ResAndSupModel>> getResAndSupData(String symbol, Resolution resolution) async {
+    try {
+      final result = await _finnhubRestService.getSupportResistanceLevel(symbol, resolution);
+      final levels = result.levels;
+      final count = levels.length;
+      if (count != 0) {
+        final maximum = levels.reduce(max);
+        final minimum = levels.reduce(min);
+        return right(
+           ResAndSupModel(levels, count, maximum, minimum)
+        );
+      } else {
+        return left(BasicFailure());
+      }
+
     } catch (e) {
       return left(BasicFailure());
     }
