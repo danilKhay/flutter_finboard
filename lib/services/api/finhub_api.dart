@@ -16,6 +16,12 @@ abstract class FinHubApi {
     @Query('q') String searchQuery,
   });
 
+  @GET('/quote')
+  Future<Quote> getQuote({
+    @Query('token') String token,
+    @Query('symbol') String symbol,
+  });
+
   @GET('/stock/symbol')
   Future<List<Stock>> getStocks({
     @Query('token') String token,

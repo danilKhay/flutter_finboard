@@ -38,6 +38,27 @@ class _FinHubApi implements FinHubApi {
   }
 
   @override
+  Future<Quote> getQuote({token, symbol}) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'token': token,
+      r'symbol': symbol
+    };
+    queryParameters.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>('/quote',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = Quote.fromJson(_result.data);
+    return value;
+  }
+
+  @override
   Future<List<Stock>> getStocks({token, exchange}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{

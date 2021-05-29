@@ -1,6 +1,6 @@
 import 'package:finboard_app/models/resolution.dart';
 import 'package:finboard_app/services/api/finhub_api.dart';
-import 'package:finboard_app/services/basic/basic_rest_service.dart';
+import 'package:finboard_app/services/datasource/basic_rest_service.dart';
 import 'package:dio/dio.dart';
 
 import '../../entities/entities.dart';
@@ -18,6 +18,12 @@ class FinnhubRestService extends BasicRestService {
   Future<SearchSymbolsResult> searchSymbols(String searchQuery) async {
     return _handleFuture<SearchSymbolsResult>(_finHubApi.searchSymbolsByName(
         token: Constants.apiKey, searchQuery: searchQuery));
+  }
+
+  Future<Quote> getQuote(String symbol) async {
+    return _handleFuture<Quote>(_finHubApi.getQuote(
+      token: Constants.apiKey, symbol: symbol,
+    ));
   }
 
   Future<List<Stock>> getStocks(String exchange) async {

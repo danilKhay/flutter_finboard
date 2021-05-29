@@ -22,7 +22,8 @@ class CompanyProfileWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Image.network(
-                    "https://logo.clearbit.com/${cp.webUrl.substring(12)}",
+                    //"https://logo.clearbit.com/${cp.webUrl.substring(12)}",
+                    cp.logoUrl,
                     fit: BoxFit.contain,
                     width: 80,
                     height: 80,

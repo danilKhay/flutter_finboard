@@ -183,7 +183,12 @@ class _NewsSentimentWidgetState extends State<NewsSentimentWidget> {
   List<DoughnutSeries<ChartData, String>> _getElevationDoughnutSeries(
       double percentage) {
     final firstPercentage = percentage * 100;
-    final secondPercentage = (1.0 - percentage) * 100;
+    double secondPercentage;
+    if (firstPercentage > 100) {
+      secondPercentage = 0;
+    } else {
+      secondPercentage = (1.0 - percentage) * 100;
+    }
     final List<ChartData> chartData = <ChartData>[
       ChartData(
           x: 'A',

@@ -7,15 +7,18 @@ import 'package:finboard_app/models/candle_chart_data.dart';
 import 'package:finboard_app/models/column_chart_data.dart';
 import 'package:finboard_app/models/res_sup_model.dart';
 import 'package:finboard_app/models/resolution.dart';
-import 'package:finboard_app/services/finnhub_rest_service/finnhub_rest_service.dart';
+import 'package:finboard_app/services/datasource/finnhub_rest_service.dart';
 import 'package:finboard_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 
-class ChartRepository {
+import '../contracts/chart_repository_contract.dart';
+
+class ChartRepository implements ChartRepositoryContract {
   final FinnhubRestService _finnhubRestService;
 
   ChartRepository(this._finnhubRestService);
 
+  @override
   Future<Either<Failure, CandlesModel>> getCandleChartData(String symbol,
       DateTime fromDate, DateTime toDate, Resolution resolution) async {
     try {
@@ -45,6 +48,7 @@ class ChartRepository {
     }
   }
 
+  @override
   Future<Either<Failure, List<ColumnChartData>>> getColumnChartData(
       String symbol) async {
     try {
@@ -61,6 +65,7 @@ class ChartRepository {
     }
   }
 
+  @override
   Future<Either<Failure, List<AggregateChartData>>> getAggregateChartData(String symbol, Resolution resolution) async {
     try {
       final result = await _finnhubRestService.getAggregateIndicators(symbol, resolution);
@@ -77,6 +82,7 @@ class ChartRepository {
     }
   }
 
+  @override
   Future<Either<Failure, ResAndSupModel>> getResAndSupData(String symbol, Resolution resolution) async {
     try {
       final result = await _finnhubRestService.getSupportResistanceLevel(symbol, resolution);
