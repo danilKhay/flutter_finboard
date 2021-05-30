@@ -106,7 +106,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     default: {
                       return OutlinedButton(
                         onPressed: () {
-                          _appViewModel.getTicker(textController.text);
+                          _appViewModel.getTicker(textController.text.toUpperCase());
                         },
                         child: Text(
                           'Analyze',

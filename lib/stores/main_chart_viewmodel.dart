@@ -157,6 +157,21 @@ abstract class _MainChartViewModelBase with Store {
     }
   }
 
+  @action
+  Future refresh(String symbol) async {
+    mainChartState = MainChartState.loading;
+    candleInstruments = CandleInstruments.none;
+    marketCapInstruments = MarketCapInstruments.none;
+    candleState = CandleState.hilo;
+    candlesModel = null;
+    dailyMarketCap = null;
+    fairMarketCap = null;
+    fairMarketCapDiff = null;
+    marketCapDownLevel = null;
+    resAndSupModel = null;
+    await getCandleData(symbol);
+  }
+
 }
 
 enum MainChartState {

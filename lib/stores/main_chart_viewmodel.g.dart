@@ -120,6 +120,13 @@ mixin _$MainChartViewModel on _MainChartViewModelBase, Store {
     return _$getDownLevelAsyncAction.run(() => super.getDownLevel(symbol));
   }
 
+  final _$refreshAsyncAction = AsyncAction('_MainChartViewModelBase.refresh');
+
+  @override
+  Future<dynamic> refresh(String symbol) {
+    return _$refreshAsyncAction.run(() => super.refresh(symbol));
+  }
+
   final _$_MainChartViewModelBaseActionController =
       ActionController(name: '_MainChartViewModelBase');
 

@@ -23,7 +23,10 @@ abstract class _AppViewModelBase with Store {
   Future getTicker(String symbol) async {
     tickerState = TickerState.loading;
     final result = await companyRepo.isUSCompanySymbol(symbol);
-    result.fold((l) => errorMessage = 'Error Wrong Ticker. Only US Market', (r) {
+    result.fold((l) {
+      errorMessage = 'Error. Wrong Ticker $symbol. Only US Market.';
+      tickerState = TickerState.none;
+    }, (r) {
       ticker = symbol;
       tickerState = TickerState.success;
     });

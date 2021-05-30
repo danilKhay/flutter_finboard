@@ -25,7 +25,10 @@ class CompanyRepository implements CompanyRepositoryContract{
 
   Future<Either<Failure, bool>> isUSCompanySymbol(String symbol) async {
     try {
-      await _finnhubRestService.getQuote(symbol);
+      final result = await _finnhubRestService.getQuote(symbol);
+      if (result.t == 0 && result.pc == 0 && result.o == 0) {
+        return left(BasicFailure());
+      }
       return right(true);
     } catch (e) {
       return left(BasicFailure());

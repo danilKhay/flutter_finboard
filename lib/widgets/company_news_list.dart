@@ -24,17 +24,20 @@ class _CompanyNewsListWidgetState extends State<CompanyNewsListWidget> {
           child: Text('Last News', style: Theme.of(context).textTheme.headline6,),
         ),
         Divider(),
-        Expanded(
-          child: Scrollbar(
-            child: ListView.builder(
-              itemCount: list.length,
-              itemBuilder: (context, index) {
-                final item = list[index];
-                return buildListItem(item);
-              },
+        if (list.isEmpty)
+          Expanded(child: Center(child: Text('No news for the last 7 days.'),)),
+        if (list.isNotEmpty)
+          Expanded(
+            child: Scrollbar(
+              child: ListView.builder(
+                itemCount: list.length,
+                itemBuilder: (context, index) {
+                  final item = list[index];
+                  return buildListItem(item);
+                },
+              ),
             ),
           ),
-        ),
       ],
     );
   }

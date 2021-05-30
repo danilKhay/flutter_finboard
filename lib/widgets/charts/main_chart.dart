@@ -15,6 +15,8 @@ import 'package:provider/provider.dart';
 /// Chart import
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import '../error_widget.dart';
+
 class MainChart extends StatefulWidget {
   final String symbol;
 
@@ -29,43 +31,25 @@ class _MainChartState extends State<MainChart> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Observer(builder: (_) {
-          switch (_mainChartViewModel.mainChartState) {
-            case MainChartState.loading:
-              return Container();
-            case MainChartState.candle:
-              return _buildButtonsCandle();
-            case MainChartState.marketCap:
-              return _buildButtonsMarketCap();
-            case MainChartState.error:
-              return Container();
-            default:
-              {
-                return Container();
-              }
+    return Observer(builder: (_) {
+      switch (_mainChartViewModel.mainChartState) {
+        case MainChartState.loading:
+          return Expanded(child: Loading());
+        case MainChartState.candle:
+          return _buildHiloOpenClose(_mainChartViewModel.candlesModel);
+        case MainChartState.marketCap:
+          return _buildMarketCap(_mainChartViewModel.dailyMarketCap);
+        case MainChartState.error:
+          return MaterialErrorWidget(onRefresh: () {
+            _mainChartViewModel.refresh(widget.symbol);
+          },);
+        default:
+          {
+            _mainChartViewModel.getCandleData(widget.symbol);
+            return Expanded(child: Loading());
           }
-        }),
-        Observer(builder: (_) {
-          switch (_mainChartViewModel.mainChartState) {
-            case MainChartState.loading:
-              return Expanded(child: Loading());
-            case MainChartState.candle:
-              return _buildHiloOpenClose(_mainChartViewModel.candlesModel);
-            case MainChartState.marketCap:
-              return _buildMarketCap(_mainChartViewModel.dailyMarketCap);
-            case MainChartState.error:
-              return Container();
-            default:
-              {
-                _mainChartViewModel.getCandleData(widget.symbol);
-                return Expanded(child: Loading());
-              }
-          }
-        }),
-      ],
-    );
+      }
+    });
   }
 
   @override
@@ -148,42 +132,47 @@ class _MainChartState extends State<MainChart> {
     final minimum = candlesModel.minPrice - distance * 0.1;
     final maximum = candlesModel.maxPrice + distance * 0.1;
 
-    return Expanded(
-      child: Stack(
-        children: [
-          SfCartesianChart(
-            margin: EdgeInsets.all(4),
-            plotAreaBorderWidth: 0,
-            primaryXAxis: DateTimeAxis(
-                dateFormat: DateFormat.yMd(),
-                interval: 15,
-                intervalType: DateTimeIntervalType.days,
-                majorGridLines: MajorGridLines(width: 1)),
-            primaryYAxis: NumericAxis(
-                minimum: minimum,
-                maximum: maximum,
-                interval: distance * 0.1,
-                labelFormat: '\${value}',
-                axisLine: AxisLine(width: 1)),
-            series: _getSeries(data: candlesModel),
-            crosshairBehavior: CrosshairBehavior(
-                enable: true,
-                hideDelay: 2000,
-                lineWidth: 1,
-                activationMode: ActivationMode.singleTap,
-                shouldAlwaysShow: true,
-                lineType: CrosshairLineType.both),
-            zoomPanBehavior: ZoomPanBehavior(
-                enablePinching: true,
-                zoomMode: ZoomMode.xy,
-                enablePanning: true,
-                enableMouseWheelZooming: true),
+    return Column(
+      children: [
+        _buildButtonsCandle(),
+        Expanded(
+          child: Stack(
+            children: [
+              SfCartesianChart(
+                margin: EdgeInsets.all(4),
+                plotAreaBorderWidth: 0,
+                primaryXAxis: DateTimeAxis(
+                    dateFormat: DateFormat.yMd(),
+                    interval: 15,
+                    intervalType: DateTimeIntervalType.days,
+                    majorGridLines: MajorGridLines(width: 1)),
+                primaryYAxis: NumericAxis(
+                    minimum: minimum,
+                    maximum: maximum,
+                    interval: distance * 0.1,
+                    labelFormat: '\${value}',
+                    axisLine: AxisLine(width: 1)),
+                series: _getSeries(data: candlesModel),
+                crosshairBehavior: CrosshairBehavior(
+                    enable: true,
+                    hideDelay: 2000,
+                    lineWidth: 1,
+                    activationMode: ActivationMode.singleTap,
+                    shouldAlwaysShow: true,
+                    lineType: CrosshairLineType.both),
+                zoomPanBehavior: ZoomPanBehavior(
+                    enablePinching: true,
+                    zoomMode: ZoomMode.xy,
+                    enablePanning: true,
+                    enableMouseWheelZooming: true),
+              ),
+              if (_mainChartViewModel.candleInstruments ==
+                  CandleInstruments.loading)
+                Loading(),
+            ],
           ),
-          if (_mainChartViewModel.candleInstruments ==
-              CandleInstruments.loading)
-            Loading(),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -245,51 +234,56 @@ class _MainChartState extends State<MainChart> {
   }
 
   Widget _buildMarketCap(List<DailyMarketCapModel> dailyMarketCapModel) {
-    return Expanded(
-      child: Stack(
-        children: [
-          SfCartesianChart(
-            margin: EdgeInsets.all(4),
-            plotAreaBorderWidth: 0,
-            primaryXAxis: DateTimeAxis(
-                dateFormat: DateFormat.yMd(),
-                intervalType: DateTimeIntervalType.days,
-                majorGridLines: MajorGridLines(width: 1)),
-            primaryYAxis: NumericAxis(
-                labelFormat: '\${value}', axisLine: AxisLine(width: 1)),
-            series: [
-              getMarketCapSeries(dailyMarketCapModel),
+    return Column(
+      children: [
+        _buildButtonsMarketCap(),
+        Expanded(
+          child: Stack(
+            children: [
+              SfCartesianChart(
+                margin: EdgeInsets.all(4),
+                plotAreaBorderWidth: 0,
+                primaryXAxis: DateTimeAxis(
+                    dateFormat: DateFormat.yMd(),
+                    intervalType: DateTimeIntervalType.days,
+                    majorGridLines: MajorGridLines(width: 1)),
+                primaryYAxis: NumericAxis(
+                    labelFormat: '\${value}', axisLine: AxisLine(width: 1)),
+                series: [
+                  getMarketCapSeries(dailyMarketCapModel),
+                  if (_mainChartViewModel.marketCapInstruments ==
+                      MarketCapInstruments.fair)
+                    getFairMarketCapSeries(_mainChartViewModel.fairMarketCap),
+                  if (_mainChartViewModel.marketCapInstruments == MarketCapInstruments.fairDiff)
+                    getFairMarketCapDiffSeries(_mainChartViewModel.fairMarketCapDiff),
+                  if (_mainChartViewModel.marketCapInstruments == MarketCapInstruments.downLevel)
+                    getMarketCapDownLevelSeries(_mainChartViewModel.marketCapDownLevel),
+                ],
+                crosshairBehavior: CrosshairBehavior(
+                    enable: true,
+                    hideDelay: 2000,
+                    lineWidth: 1,
+                    activationMode: ActivationMode.singleTap,
+                    shouldAlwaysShow: true,
+                    lineType: CrosshairLineType.both),
+                zoomPanBehavior: ZoomPanBehavior(
+                    /// To enable the pinch zooming as true.
+                    enablePinching: true,
+                    zoomMode: ZoomMode.xy,
+                    enablePanning: true,
+                    enableMouseWheelZooming: true),
+                legend: Legend(
+                  isVisible: true,
+                  position: LegendPosition.bottom,
+                ),
+              ),
               if (_mainChartViewModel.marketCapInstruments ==
-                  MarketCapInstruments.fair)
-                getFairMarketCapSeries(_mainChartViewModel.fairMarketCap),
-              if (_mainChartViewModel.marketCapInstruments == MarketCapInstruments.fairDiff)
-                getFairMarketCapDiffSeries(_mainChartViewModel.fairMarketCapDiff),
-              if (_mainChartViewModel.marketCapInstruments == MarketCapInstruments.downLevel)
-                getMarketCapDownLevelSeries(_mainChartViewModel.marketCapDownLevel),
+                  MarketCapInstruments.loading)
+                Loading(),
             ],
-            crosshairBehavior: CrosshairBehavior(
-                enable: true,
-                hideDelay: 2000,
-                lineWidth: 1,
-                activationMode: ActivationMode.singleTap,
-                shouldAlwaysShow: true,
-                lineType: CrosshairLineType.both),
-            zoomPanBehavior: ZoomPanBehavior(
-                /// To enable the pinch zooming as true.
-                enablePinching: true,
-                zoomMode: ZoomMode.xy,
-                enablePanning: true,
-                enableMouseWheelZooming: true),
-            legend: Legend(
-              isVisible: true,
-              position: LegendPosition.bottom,
-            ),
           ),
-          if (_mainChartViewModel.marketCapInstruments ==
-              MarketCapInstruments.loading)
-            Loading(),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
