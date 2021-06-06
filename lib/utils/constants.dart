@@ -5,6 +5,6 @@ class Constants {
 
   static const String backApiBaseUrl = 'http://fattakhov.site/api';
 
-  static const restConnectionTimeout = 10000;
+  static const restConnectionTimeout = 30000;
   static const restSendTimeout = 10000;
 }

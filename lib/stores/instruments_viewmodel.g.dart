@@ -42,23 +42,6 @@ mixin _$InstrumentsViewModel on _InstrumentsViewModelBase, Store {
     });
   }
 
-  final _$companyNewsSentimentStateAtom =
-      Atom(name: '_InstrumentsViewModelBase.companyNewsSentimentState');
-
-  @override
-  LoadingState get companyNewsSentimentState {
-    _$companyNewsSentimentStateAtom.reportRead();
-    return super.companyNewsSentimentState;
-  }
-
-  @override
-  set companyNewsSentimentState(LoadingState value) {
-    _$companyNewsSentimentStateAtom
-        .reportWrite(value, super.companyNewsSentimentState, () {
-      super.companyNewsSentimentState = value;
-    });
-  }
-
   final _$recommendationStateAtom =
       Atom(name: '_InstrumentsViewModelBase.recommendationState');
 
@@ -127,24 +110,6 @@ mixin _$InstrumentsViewModel on _InstrumentsViewModelBase, Store {
         .run(() => super.refreshCompanyNews(symbol));
   }
 
-  final _$getCompanyNewsSentimentAsyncAction =
-      AsyncAction('_InstrumentsViewModelBase.getCompanyNewsSentiment');
-
-  @override
-  Future<dynamic> getCompanyNewsSentiment(String symbol) {
-    return _$getCompanyNewsSentimentAsyncAction
-        .run(() => super.getCompanyNewsSentiment(symbol));
-  }
-
-  final _$refreshCompanyNewsSentimentAsyncAction =
-      AsyncAction('_InstrumentsViewModelBase.refreshCompanyNewsSentiment');
-
-  @override
-  Future<dynamic> refreshCompanyNewsSentiment(String symbol) {
-    return _$refreshCompanyNewsSentimentAsyncAction
-        .run(() => super.refreshCompanyNewsSentiment(symbol));
-  }
-
   final _$getRecommendationsAsyncAction =
       AsyncAction('_InstrumentsViewModelBase.getRecommendations');
 
@@ -193,7 +158,6 @@ mixin _$InstrumentsViewModel on _InstrumentsViewModelBase, Store {
     return '''
 companyLoadingState: ${companyLoadingState},
 companyNewsLoadingState: ${companyNewsLoadingState},
-companyNewsSentimentState: ${companyNewsSentimentState},
 recommendationState: ${recommendationState},
 aggregateSignalState: ${aggregateSignalState}
     ''';

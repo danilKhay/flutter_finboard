@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:finboard_app/entities/social_sentiment.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:retrofit/http.dart';
 
 import '../../entities/entities.dart';
@@ -100,5 +102,13 @@ abstract class FinHubApi {
     @Query('symbol') String symbol,
     // Supported resolution includes 1, 5, 15, 30, 60, D, W, M .Some timeframes might not be available depending on the exchange.
     @Query('resolution') String resolution,
+  });
+
+  @GET('/stock/social-sentiment')
+  Future<SocialSentiment> getSocialSentiment({
+    @Query('token') String token,
+    @Query('symbol') String symbol,
+    @Query('from') String fromTime,
+    @Query('to') String toTime,
   });
 }

@@ -1,3 +1,4 @@
+import 'package:finboard_app/entities/social_sentiment.dart';
 import 'package:finboard_app/models/resolution.dart';
 import 'package:finboard_app/services/api/finhub_api.dart';
 import 'package:finboard_app/services/datasource/basic_rest_service.dart';
@@ -99,6 +100,15 @@ class FinnhubRestService extends BasicRestService {
         token: Constants.apiKey,
         symbol: symbol,
         resolution: fromResolutionToString(resolution)));
+  }
+
+  Future<SocialSentiment> getSocialSentiment(
+      String symbol, String fromTime, String toTime) async {
+    return _handleFuture<SocialSentiment>(_finHubApi.getSocialSentiment(
+        token: Constants.apiKey,
+        symbol: symbol,
+        fromTime: fromTime,
+        toTime: toTime));
   }
 
   //Handling

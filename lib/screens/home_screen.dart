@@ -1,6 +1,7 @@
 import 'package:finboard_app/stores/app_viewmodel.dart';
 import 'package:finboard_app/stores/instruments_viewmodel.dart';
 import 'package:finboard_app/stores/main_chart_viewmodel.dart';
+import 'package:finboard_app/stores/sentiment_viewmodel.dart';
 import 'package:finboard_app/widgets/charts/aggregate_pie_chart.dart';
 import 'package:finboard_app/widgets/charts/column_chart.dart';
 import 'package:finboard_app/widgets/charts/main_chart.dart';
@@ -52,13 +53,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Expanded(
                     flex: 2,
-                    child: buildMainChart(),
+                    child: Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: Card(
+                        child: Provider(
+                          create: (_) => MainChartViewModel(),
+                          child: MainChart(Key('MainChart'), symbol),
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
             Expanded(
-              flex: 1,
               child: buildTwoEndCards(),
             ),
           ],
@@ -70,24 +78,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Column buildTwoEndCards() {
     return Column(
       children: [
-        Observer(builder: (context) {
-          return buildObserverResult(
-            _instrumentsViewModel.companyNewsSentimentState,
-            buildNewsSentiment,
-            () {
-              _instrumentsViewModel.refreshCompanyNewsSentiment(symbol);
-            },
-          );
-        }),
-        Observer(builder: (context) {
-          return buildObserverResult(
-            _instrumentsViewModel.companyNewsLoadingState,
-            buildCompanyNews,
-            () {
-              _instrumentsViewModel.refreshCompanyNews(symbol);
-            },
-          );
-        }),
+        buildSentiment(),
+        buildCompanyNews(),
       ],
     );
   }
@@ -97,69 +89,44 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Padding(
         padding: const EdgeInsets.all(2.0),
         child: Card(
-          child: CompanyNewsListWidget(
-            companyNewsList: _instrumentsViewModel.companyNews,
-          ),
+          child: Observer(builder: (context) {
+            return buildObserverResult(
+              _instrumentsViewModel.companyNewsLoadingState,
+              () {
+                return CompanyNewsListWidget(
+                    companyNewsList: _instrumentsViewModel.companyNews);
+              },
+              () {
+                _instrumentsViewModel.refreshCompanyNews(symbol);
+              },
+            );
+          }),
         ),
       ),
     );
   }
 
-  Expanded buildNewsSentiment() {
+  Expanded buildSentiment() {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.all(2.0),
         child: Card(
-          child: NewsSentimentWidget(
-            companyNewsSentiment: _instrumentsViewModel.companyNewsSentiment,
+          child: Provider(
+            create: (_) => SentimentViewModel(),
+            child: NewsSentimentWidget(symbol: symbol),
           ),
         ),
       ),
     );
   }
 
-  Padding buildMainChart() {
-    return Padding(
-      padding: const EdgeInsets.all(2.0),
-      child: Card(
-        child: Provider(
-          create: (_) => MainChartViewModel(),
-          child: MainChart(Key('MainChart'), symbol),
-        ),
-      ),
-    );
-  }
 
   Row buildThreeTopCards() {
     return Row(
       children: [
-        Observer(builder: (_) {
-          return buildObserverResult(
-            _instrumentsViewModel.companyLoadingState,
-            buildCompanyProfile,
-            () {
-              _instrumentsViewModel.refreshCompanyProfile(symbol);
-            },
-          );
-        }),
-        Observer(builder: (context) {
-          return buildObserverResult(
-            _instrumentsViewModel.aggregateSignalState,
-            buildAggregateSignal,
-            () {
-              _instrumentsViewModel.refreshAggregateSignal(symbol);
-            },
-          );
-        }),
-        Observer(builder: (context) {
-          return buildObserverResult(
-            _instrumentsViewModel.recommendationState,
-            buildRecommendations,
-            () {
-              _instrumentsViewModel.refreshRecommendations(symbol);
-            },
-          );
-        }),
+        buildCompanyProfile(),
+        buildAggregateSignal(),
+        buildRecommendations(),
       ],
     );
   }
@@ -169,10 +136,20 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Padding(
         padding: const EdgeInsets.all(2.0),
         child: Card(
-          child: ColumnBack(
-            Key('Recommendations'),
-            _instrumentsViewModel.recommendations,
-          ),
+          child: Observer(builder: (context) {
+            return buildObserverResult(
+              _instrumentsViewModel.recommendationState,
+              () {
+                return ColumnBack(
+                  Key('Recommendations'),
+                  _instrumentsViewModel.recommendations,
+                );
+              },
+              () {
+                _instrumentsViewModel.refreshRecommendations(symbol);
+              },
+            );
+          }),
         ),
       ),
     );
@@ -182,15 +159,15 @@ class _HomeScreenState extends State<HomeScreen> {
       LoadingState loadingState, Function getWidget, Function onRefresh) {
     switch (loadingState) {
       case LoadingState.initial:
-        return Expanded(child: Container());
+        return Container();
       case LoadingState.loading:
-        return buildLoading();
+        return Loading();
       case LoadingState.success:
         return getWidget();
       case LoadingState.error:
         return MaterialErrorWidget(onRefresh: onRefresh);
       default:
-        return Expanded(child: Container());
+        return Container();
     }
   }
 
@@ -199,11 +176,21 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Padding(
         padding: const EdgeInsets.all(2.0),
         child: Card(
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 4.0),
-            child: SemiPieChart(
-                Key('Aggregate Signal'), _instrumentsViewModel.aggregateSignal),
-          ),
+          child: Observer(builder: (context) {
+            return buildObserverResult(
+              _instrumentsViewModel.aggregateSignalState,
+              () {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 4.0),
+                  child: SemiPieChart(Key('Aggregate Signal'),
+                      _instrumentsViewModel.aggregateSignal),
+                );
+              },
+              () {
+                _instrumentsViewModel.refreshAggregateSignal(symbol);
+              },
+            );
+          }),
         ),
       ),
     );
@@ -213,19 +200,23 @@ class _HomeScreenState extends State<HomeScreen> {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.all(2.0),
-        child: CompanyProfileWidget(
-          cp: _instrumentsViewModel.companyProfileModel,
-        ),
-      ),
-    );
-  }
-
-  Expanded buildLoading() {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.all(2.0),
         child: Card(
-          child: Loading(),
+          child: Observer(builder: (_) {
+            return buildObserverResult(
+              _instrumentsViewModel.companyLoadingState,
+              () {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CompanyProfileWidget(
+                    cp: _instrumentsViewModel.companyProfileModel,
+                  ),
+                );
+              },
+              () {
+                _instrumentsViewModel.refreshCompanyProfile(symbol);
+              },
+            );
+          }),
         ),
       ),
     );

@@ -34,7 +34,7 @@ class _MainChartState extends State<MainChart> {
     return Observer(builder: (_) {
       switch (_mainChartViewModel.mainChartState) {
         case MainChartState.loading:
-          return Expanded(child: Loading());
+          return Loading();
         case MainChartState.candle:
           return _buildHiloOpenClose(_mainChartViewModel.candlesModel);
         case MainChartState.marketCap:
@@ -46,7 +46,7 @@ class _MainChartState extends State<MainChart> {
         default:
           {
             _mainChartViewModel.getCandleData(widget.symbol);
-            return Expanded(child: Loading());
+            return Loading();
           }
       }
     });

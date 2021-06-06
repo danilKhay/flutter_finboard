@@ -310,4 +310,29 @@ class _FinHubApi implements FinHubApi {
     final value = AggregateIndicators.fromJson(_result.data);
     return value;
   }
+
+  @override
+  Future<SocialSentiment> getSocialSentiment(
+      {token, symbol, fromTime, toTime}) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'token': token,
+      r'symbol': symbol,
+      r'from': fromTime,
+      r'to': toTime
+    };
+    queryParameters.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>(
+        '/stock/social-sentiment',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = SocialSentiment.fromJson(_result.data);
+    return value;
+  }
 }

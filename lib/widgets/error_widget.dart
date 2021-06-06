@@ -9,7 +9,7 @@ class MaterialErrorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(child: Center(
+    return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -20,6 +20,6 @@ class MaterialErrorWidget extends StatelessWidget {
           OutlinedButton(onPressed: onRefresh, child: Text('Refresh')),
         ],
       ),
-    ),);
+    );
   }
 }

@@ -1,6 +1,5 @@
 import 'package:finboard_app/di/service_locator.dart';
 import 'package:finboard_app/entities/company_news.dart';
-import 'package:finboard_app/entities/company_news_sentiment.dart';
 import 'package:finboard_app/models/aggregate_chart_data.dart';
 import 'package:finboard_app/models/column_chart_data.dart';
 import 'package:finboard_app/models/company_profile_model.dart';
@@ -19,7 +18,6 @@ abstract class _InstrumentsViewModelBase with Store {
 
   CompanyProfileModel companyProfileModel;
   List<CompanyNews> companyNews;
-  CompanyNewsSentiment companyNewsSentiment;
   List<ColumnChartData> recommendations;
   List<AggregateChartData> aggregateSignal;
 
@@ -27,8 +25,6 @@ abstract class _InstrumentsViewModelBase with Store {
   LoadingState companyLoadingState = LoadingState.initial;
   @observable
   LoadingState companyNewsLoadingState = LoadingState.initial;
-  @observable
-  LoadingState companyNewsSentimentState = LoadingState.initial;
   @observable
   LoadingState recommendationState = LoadingState.initial;
   @observable
@@ -79,27 +75,6 @@ abstract class _InstrumentsViewModelBase with Store {
   }
 
   @action
-  Future getCompanyNewsSentiment(String symbol) async {
-    companyNewsSentimentState = LoadingState.loading;
-    if (companyNewsSentiment == null) {
-      final result = await companyRepo.getCompanyNewsSentiment(symbol);
-      result.fold((l) => companyNewsSentimentState = LoadingState.error, (r) {
-        companyNewsSentiment = r;
-        companyNewsSentimentState = LoadingState.success;
-      });
-    } else {
-      companyNewsSentimentState = LoadingState.success;
-    }
-  }
-
-  @action
-  Future refreshCompanyNewsSentiment(String symbol) async {
-    companyNewsSentimentState = LoadingState.initial;
-    companyNewsSentiment = null;
-    await getCompanyNewsSentiment(symbol);
-  }
-
-  @action
   Future getRecommendations(String symbol) async {
     recommendationState = LoadingState.loading;
     if (recommendations == null) {
@@ -147,8 +122,6 @@ abstract class _InstrumentsViewModelBase with Store {
       getCompanyProfile(symbol);
     if (companyNewsLoadingState == LoadingState.initial)
       getCompanyNews(symbol);
-    if (companyNewsSentimentState == LoadingState.initial)
-      getCompanyNewsSentiment(symbol);
     if (recommendationState == LoadingState.initial)
       getRecommendations(symbol);
     if (aggregateSignalState == LoadingState.initial)
