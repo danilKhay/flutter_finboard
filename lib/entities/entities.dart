@@ -10,3 +10,8 @@ export 'candles.dart';
 export 'pattern_recognition.dart';
 export 'support_and_resistance_level.dart';
 export 'aggregate_indicators.dart';
+export 'daily_market_cap.dart';
+export 'fair_market_cap.dart';
+export 'fair_market_cap_diff.dart';
+export 'market_cap_down_level.dart';
+export 'quote.dart';

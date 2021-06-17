@@ -10,9 +10,19 @@ class CompanyProfileModel {
   final String ipoDate;
   final String country;
   final String share;
+  final String logoUrl;
 
-  CompanyProfileModel(this.webUrl, this.name, this.ticker, this.exchange,
-      this.marketCap, this.industry, this.ipoDate, this.country, this.share);
+  CompanyProfileModel(
+      this.webUrl,
+      this.name,
+      this.ticker,
+      this.exchange,
+      this.marketCap,
+      this.industry,
+      this.ipoDate,
+      this.country,
+      this.share,
+      this.logoUrl);
 
   factory CompanyProfileModel.fromEntity(CompanyProfile cp) {
     final marketCap = '${cp.marketCapitalization} millions ${cp.currency}';
@@ -26,6 +36,7 @@ class CompanyProfileModel {
         cp.finnhubIndustry,
         cp.ipo,
         cp.country,
-        share);
+        share,
+        cp.logo);
   }
 }

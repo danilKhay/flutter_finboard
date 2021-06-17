@@ -1,4 +1,4 @@
-import 'package:finboard_app/widgets/charts/sample_view.dart';
+import 'package:finboard_app/models/column_chart_data.dart';
 /// Package imports
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -6,16 +6,18 @@ import 'package:intl/intl.dart';
 /// Chart import
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-/// Render the back to back column chart sample
-class ColumnBack extends SampleView {
-  /// Creates the back to back column chart sample
-  const ColumnBack(Key key) : super(key: key);
+
+class ColumnBack extends StatefulWidget {
+
+  final List<ColumnChartData> chartData;
+
+  const ColumnBack(Key key, this.chartData) : super(key: key);
 
   @override
   _ColumnBackState createState() => _ColumnBackState();
 }
 
-class _ColumnBackState extends SampleViewState {
+class _ColumnBackState extends State<ColumnBack> {
   _ColumnBackState();
 
   @override
@@ -25,59 +27,63 @@ class _ColumnBackState extends SampleViewState {
 
   SfCartesianChart _buildBackColumnChart() {
     return SfCartesianChart(
+        margin: EdgeInsets.all(2),
+
         plotAreaBorderWidth: 0,
-        enableSideBySideSeriesPlacement: false,
+        enableSideBySideSeriesPlacement: true,
         title: ChartTitle(
-            text: 'Population of various countries'),
+            text: 'Recommendation Trends'),
         primaryXAxis: CategoryAxis(
           majorGridLines: MajorGridLines(width: 0),
         ),
         primaryYAxis: NumericAxis(
+            minimum: 0.0,
             majorTickLines: MajorTickLines(size: 0),
             numberFormat: NumberFormat.compact(),
             majorGridLines: MajorGridLines(width: 0),
             rangePadding: ChartRangePadding.additional),
-        series: _getBackToBackColumn(),
+        series: _getBackToBackColumn(widget.chartData),
         tooltipBehavior: TooltipBehavior(enable: true));
   }
 
-  List<ColumnSeries<ChartSampleData, String>> _getBackToBackColumn() {
-    final List<ChartSampleData> chartData = <ChartSampleData>[
-      ChartSampleData(
-          x: 'France',
-          y: 63621381,
-          yValue: 65027507,
-          secondSeriesYValue: 66316092),
-      ChartSampleData(
-          x: 'United Kingdom',
-          y: 60846820,
-          yValue: 62766365,
-          secondSeriesYValue: 64613160),
-      ChartSampleData(
-          x: 'Italy',
-          y: 58143979,
-          yValue: 59277417,
-          secondSeriesYValue: 60789140),
-    ];
-    return <ColumnSeries<ChartSampleData, String>>[
-      ColumnSeries<ChartSampleData, String>(
+  List<ColumnSeries<ColumnChartData, String>> _getBackToBackColumn(List<ColumnChartData> chartData) {
+
+    return <ColumnSeries<ColumnChartData, String>>[
+      ColumnSeries<ColumnChartData, String>(
+        color: Colors.greenAccent,
           dataSource: chartData,
-          width: 0.7,
-          xValueMapper: (ChartSampleData sales, _) => sales.x,
-          yValueMapper: (ChartSampleData sales, _) => sales.secondSeriesYValue,
-          name: '2014'),
-      ColumnSeries<ChartSampleData, String>(
+          width: 0.8,
+          xValueMapper: (ColumnChartData data, _) => data.period,
+          yValueMapper: (ColumnChartData data, _) => data.buy,
+          name: 'Buy'),
+      ColumnSeries<ColumnChartData, String>(
+          color: Colors.green,
           dataSource: chartData,
-          width: 0.5,
-          xValueMapper: (ChartSampleData sales, _) => sales.x,
-          yValueMapper: (ChartSampleData sales, _) => sales.yValue,
-          name: '2010'),
-      ColumnSeries<ChartSampleData, String>(
+          width: 0.8,
+          xValueMapper: (ColumnChartData data, _) => data.period,
+          yValueMapper: (ColumnChartData data, _) => data.strongBuy,
+          name: 'Strong Buy'),
+      ColumnSeries<ColumnChartData, String>(
+        color: Colors.amberAccent,
           dataSource: chartData,
-          width: 0.3,
-          xValueMapper: (ChartSampleData sales, _) => sales.x,
-          yValueMapper: (ChartSampleData sales, _) => sales.y,
-          name: '2006')
+          width: 0.8,
+          xValueMapper: (ColumnChartData data, _) => data.period,
+          yValueMapper: (ColumnChartData data, _) => data.hold,
+          name: 'Hold'),
+      ColumnSeries<ColumnChartData, String>(
+        color: Colors.orange,
+          dataSource: chartData,
+          width: 0.8,
+          xValueMapper: (ColumnChartData data, _) => data.period,
+          yValueMapper: (ColumnChartData data, _) => data.sell,
+          name: 'Sell'),
+      ColumnSeries<ColumnChartData, String>(
+        color: Colors.red,
+          dataSource: chartData,
+          width: 0.8,
+          xValueMapper: (ColumnChartData data, _) => data.period,
+          yValueMapper: (ColumnChartData data, _) => data.strongSell,
+          name: 'Strong Sell'),
     ];
   }
 }

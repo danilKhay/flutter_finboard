@@ -2,7 +2,7 @@ import 'package:intl/intl.dart';
 
 extension UnixString on DateTime {
   String toUnixString() {
-    return (this.toUtc().millisecondsSinceEpoch / 1000).toString();
+    return (this.toUtc().millisecondsSinceEpoch/1000).round().toString();
   }
 
   String toFinnHubString() {
@@ -10,4 +10,8 @@ extension UnixString on DateTime {
     final DateFormat formatter = DateFormat('yyyy-MM-dd');
     return formatter.format(utc);
   }
+}
+
+DateTime fromUnixString(int timestamp) {
+  return DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
 }
