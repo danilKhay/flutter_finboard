@@ -9,7 +9,7 @@ part of 'back_api.dart';
 class _BackApi implements BackApi {
   _BackApi(this._dio, {this.baseUrl}) {
     ArgumentError.checkNotNull(_dio, '_dio');
-    baseUrl ??= 'http://fattakhov.site/api';
+    baseUrl ??= 'http://localhost:8080';
   }
 
   final Dio _dio;
