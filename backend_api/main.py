@@ -1,21 +1,22 @@
 from flask import Flask
 from flask_restful import reqparse, Api, Resource
-from ml_investment.applications.fair_marketcap_sf1 import FairMarketcapSF1
-from ml_investment.applications.fair_marketcap_diff_sf1 import FairMarketcapDiffSF1
-from ml_investment.applications.marketcap_down_std_sf1 import MarketcapDownStdSF1
 from flask_cors import CORS
 import requests
 import json
 from datetime import datetime
+
+from models.fair_market_cap import FairMarketcap
+from models.fair_market_cap_diff import FairMarketcapDiff
+from models.marketcap_down_std import MarketcapDownStd
 
 app = Flask(__name__)
 api = Api(app)
 CORS(app)
 API_QUANDL = 'nWr2WJLCvUzbJiPyzkxn'
 
-fair_marketcap_sf1 = FairMarketcapSF1()
-fair_marketcap_diff_sf1 = FairMarketcapDiffSF1()
-marketcap_down = MarketcapDownStdSF1()
+fair_marketcap_sf1 = FairMarketcap()
+fair_marketcap_diff_sf1 = FairMarketcapDiff()
+marketcap_down = MarketcapDownStd()
 
 marketcap_parser = reqparse.RequestParser()
 marketcap_parser.add_argument('ticker', type=str)
